@@ -1,68 +1,85 @@
+<!DOCTYPE html>
 <html>
-    <body>
-       <canvas id = "can">
-       </canvas>
-       <script>
-            let can = document.getElementById("can");
-            let ctx = can.getContext('2d');
-            can.width = 500;
-            can.height =  500;
-            can.style.backgroundColor = "lightgreen";
-  
-            var h = [];
-            for(let i = 0 ; i <=100 ; ++i){
-                h[i] = 500 - Math.random()*250;
-            }
-            //bubble(h);
-            for(let i = 0 ; i < h.length; ++i){
-                console.log(h[i]);
-            }
-            var i = 0 , j = 0;
-            function animation(){
-                can.width = 500;
-                can.height =  500;
-                can.style.backgroundColor = "lightgreen";
-                let a = h[j];
-                let b = h[j+1];
-                if(a < b){
-                    swap(j , j + 1 , h);
-                }
-                if(i <= h.length){
-                    j += 1;
-                    if(j >= h.length-i-1){
-                        j = 0;
-                        i += 1;
-                    }
-                }else{
-                    document.querySelector(".para").innerHTML = "And We are done!!!";
-                }
+<head>
+	<title>binarySearch Visualization</title>
+	<style type="text/css">
+		#canvas{
+			margin-left: 5%;
+		}
+	</style>
+</head>
+<body>
+	<canvas id='canvas'>This is a worst browser</canvas>
+	<script type="text/javascript">
+		let can = document.getElementById('canvas');
+		let ctx = can.getContext('2d');
+		// let ctx1 = can.getContext('2d');
 
+		can.width = "1200";
+		can.height = "500";
+		can.style.backgroundColor = 'lightgreen';
 
-                for(let i = 0 ; i <= 100; ++i){
-                    ctx.beginPath();
-                    ctx.fillRect(i * 5, h[i],5,h[i]);
-                    ctx.stroke();
-                }
+		let rand = (mx , mn)=>{
+			return Math.floor(Math.random()*(mx - mn) + mn);
+		}
+
+		let draw = (x , y , a , b , z , color)=>{
+			// ctx.clearRect(x , y , a , b);
+			ctx.beginPath();
+			ctx.fillStyle = color;
+			ctx.fillRect(x , y , a ,b);
+			ctx.font = "15px Arial";
+			ctx.fillText(z , x , y - 10);
+            ctx.fill();
+            ctx.closePath();
+
+		}
+		let drawElement = (n) =>{
+			let heights = [];
+			for(let i = 0 ;  i < n; ++i){
+				heights.push(i + 100);
+			}
+			heights.sort();
+			for(let i = 0 ; i  < n; ++i){
+				draw(i * 30 , 500 - heights[i] ,20, heights[i] , heights[i] , "red");
+
+			}
+			var l = 0 , r = 35 , target = 137;
+		    setInterval(async function(){
+		    	
+				console.log(l , r);
+
+				setTimeout(function(){
+				  console.log(l , r);
+				  draw(l * 30 , 500 - heights[l] ,20, heights[l] , heights[l] , 'black');
+				  draw(r * 30 , 500 - heights[r] ,20, heights[r] , heights[r] , 'black');
+				},1000);
+				ctx.clearRect(0 , 0 , 1200, 500);
+				for(let i = 0 ; i  < n; ++i){
+				draw(i * 30 , 500 - heights[i] ,20, heights[i] , heights[i] , "red");
+
+			}
+				await sleep(1000);
+
+			if(l<=r){
+				let m = (l + r) >> 1;
+				if(heights[m] == target){
+					console.log('found at = ' , m);
+				}else if(heights[m] > target){
+					r = m - 1;
+				}else{
+					l = m + 1;
+				}
+			}
+
+		}, 3000);
+			
+		}
+		function sleep(ms) {
+                return new Promise(resolve => setInterval(resolve, ms));
             }
+		drawElement(100);
+	</script>
 
-
-            function bubble(x){
-                for(let i = 0 ; i < x.length; ++i){
-                    for(let j = 0 ; j < x.length; ++j){
-                        if(x[i] > x[j]){
-                            swap(i , j , x);
-                        }
-                    }
-                }
-            }
-            function swap(x , y , a){
-                let temp = a[x];
-                a[x] = a[y];
-                a[y] = temp;
-            }
-            setInterval(animation , 1);
-       </script>
-       <p class = "para"><font color = "red"></font></p>
-
-    </body>
+</body>
 </html>
